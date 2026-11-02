@@ -353,37 +353,29 @@ document.getElementById("send").onclick=submit; i.onkeydown=function(e){if(e.key
 };
 }
 
-/* ---- FIXED Spider-Man theme (the iconic "tannnn naa naa naaaaa na naaa") ---- */
+/* ---- Spider-Man theme (iconic "tannnn naa naa naaaaa na naaa") ---- */
 function spiderTune(){
 if(!ensureAudio())return;
 var at=AC.currentTime+.05;
-// The classic 1967 Spider-Man cartoon riff, in the reel rhythm:
-// "tan-NAAA naa naa NAAAAA na naaaa"
-// Notes (relative melody): E4 -> G4 -> A4 -> B4 -> A4 -> G4 -> E4 (with the held final notes)
-// We encode as [freq, duration, type, peak]
-var melody = [
-  [329.63, 0.18, "sawtooth", 0.16],  // E4   "tan"
-  [392.00, 0.28, "sawtooth", 0.18],  // G4   "NAAA" (held)
-  [440.00, 0.16, "sawtooth", 0.16],  // A4   "naa"
-  [493.88, 0.18, "sawtooth", 0.16],  // B4   "naa"
-  [440.00, 0.55, "sawtooth", 0.20],  // A4   "NAAAAA" (long hold)
-  [392.00, 0.18, "sawtooth", 0.16],  // G4   "na"
-  [329.63, 0.42, "sawtooth", 0.18]   // E4   "naaa" (final)
+var melody=[
+[329.63,0.18,"sawtooth",0.16],
+[392.00,0.28,"sawtooth",0.18],
+[440.00,0.16,"sawtooth",0.16],
+[493.88,0.18,"sawtooth",0.16],
+[440.00,0.55,"sawtooth",0.20],
+[392.00,0.18,"sawtooth",0.16],
+[329.63,0.42,"sawtooth",0.18]
 ];
 melody.forEach(function(n){
-  var f=n[0], d=n[1], ty=n[2], pk=n[3];
-  // main melodic line
-  tone(f, at, d*0.92, ty, pk);
-  // octave doubling for brightness (like the cartoon's big-band blare)
-  tone(f*2, at, d*0.9, "square", pk*0.25);
-  // low brass underneath
-  tone(f/2, at, d*1.05, "triangle", pk*0.55);
-  at += d;
+var f=n[0],d=n[1],ty=n[2],pk=n[3];
+tone(f,at,d*0.92,ty,pk);
+tone(f*2,at,d*0.9,"square",pk*0.25);
+tone(f/2,at,d*1.05,"triangle",pk*0.55);
+at+=d;
 });
-// Final little "sting" — the "spider-man!" flare
-tone(659.25, at+0.05, 0.45, "square", 0.22);
-tone(523.25, at+0.05, 0.45, "triangle", 0.25);
-tone(392.00, at+0.05, 0.50, "triangle", 0.22);
+tone(659.25,at+0.05,0.45,"square",0.22);
+tone(523.25,at+0.05,0.45,"triangle",0.25);
+tone(392.00,at+0.05,0.50,"triangle",0.22);
 }
 
 function poemHTML(st){return '<div class="poem">'+st.map(function(s){return '<p>'+s.split("\n").join("<br>")+'</p>'}).join("")+'</div>'}
@@ -413,13 +405,21 @@ screens.push({emoji:"🎟️",body:'<p class="line">your love coupons</p><p clas
 init:function(){[].forEach.call(document.querySelectorAll(".coupon"),function(b){b.onclick=function(){b.classList.toggle("used");ping()}})}});
 screens.push({emoji:"🍿",body:'<p class="line">our first date: you pick</p><div class="choices"><button class="choice" data-v="🍦 ice cream walk">🍦 ice cream walk</button><button class="choice" data-v="🎬 movie night">🎬 movie night</button><button class="choice" data-v="🌅 sunset ride">🌅 sunset ride</button></div>',foot:'none',
 init:function(){[].forEach.call(document.querySelectorAll(".choice"),function(b){b.onclick=function(){store(DATE,b.getAttribute("data-v"));sfxYes();go(idx+1)}})}});
-screens.push({emoji:"📅",body:'<p class="line">now you decide: when &amp; where?</p><div class="fields"><label>📅 date<input type="date" id="pd"></label><label>⏰ time<input type="time" id="pt"></label><label>📍 place name<input type="text" id="pp" maxlength="80" placeholder="e.g. our favourite café" autocomplete="off"></label></div>',foot:'plan',
+
+/* ---- DATE PAGE (updated: "only if u want" + "leave it for now") ---- */
+screens.push({emoji:"📅",body:'<p class="line">now you decide: when &amp; where?</p><p class="sub">only if u want 💌</p><div class="fields"><label>📅 date<input type="date" id="pd"></label><label>⏰ time<input type="time" id="pt"></label><label>📍 place name<input type="text" id="pp" maxlength="80" placeholder="e.g. our favourite café" autocomplete="off"></label></div>',foot:'plan',
 init:function(){
 var d=document.getElementById("pd"),t=document.getElementById("pt"),pl=document.getElementById("pp"),n=new Date();
 d.min=n.getFullYear()+"-"+("0"+(n.getMonth()+1)).slice(-2)+"-"+("0"+n.getDate()).slice(-2);
 document.getElementById("lock").onclick=function(){
 if(!d.value||!t.value||!pl.value.trim()){document.getElementById("planhint").textContent="pick a date, time and place 🥺";return}
-store(CANCEL,null);store(PLAN,JSON.stringify({d:d.value,t:t.value,p:pl.value.trim()}));sfxYes();go(idx+1)}}});
+store(CANCEL,null);store(PLAN,JSON.stringify({d:d.value,t:t.value,p:pl.value.trim()}));sfxYes();go(idx+1)};
+document.getElementById("later").onclick=function(){
+store(CANCEL,"left for now");sfxBack();
+go(0,cancelScreens);
+};
+}});
+
 screens.push({emoji:"🥳",body:function(){
 var o={};try{o=JSON.parse(load(PLAN)||"{}")}catch(e){}
 var ds=o.d||"",ts=o.t||"";
@@ -479,11 +479,14 @@ no.style.left=x+"px"; no.style.top=y+"px";
 }
 hop(); dodgeTimer=setInterval(hop,40);
 }
+
+/* FIX: caught() now ALWAYS stores "NO" (removed the buggy !== "YES" guard) */
 function caught(){
 stopDodge(); sfxCaught(); setMusic("no");
-if(load(KEY)!=="YES")store(KEY,"NO");
+store(KEY,"NO");
 go(0,noScreens);
 }
+
 function onNo(){
 if(dodgeTimer){caught();return}
 sfxNo();
@@ -492,7 +495,13 @@ var hint=document.getElementById("hint");
 if(hint)hint.textContent=noMsgs[Math.min(noCount,4)-1];
 if(noCount>=4)startDodge();
 }
+
+/* FIX: only record YES when actually on an ask screen, so the
+   cancel-date jump or any stale binding can't overwrite an existing NO */
 function onYes(){
+if(flow!==screens)return;
+var s=flow[idx];
+if(!s||s.foot!=="ask")return;
 sfxYes();
 if(curTrack!=="yes")setMusic("yes");
 store(KEY,"YES");
@@ -521,14 +530,14 @@ if(s.foot==="next")foot='<div><button class="next" id="next">Next</button></div>
 if(s.foot==="nextleave")foot='<div class="row"><button class="next" id="next">Next</button><button class="leave" id="leave">🚪 Leave</button></div>';
 if(s.foot==="reason")foot='<div class="row"><input id="why" class="why" maxlength="300" placeholder="type here…" autocomplete="off"><button class="next" id="send">Send</button></div><div class="hint" id="whyhint"></div>';
 if(s.foot==="leave")foot='<div class="row"><button class="leave" id="leave">🚪 Leave</button></div>';
-if(s.foot==="plan")foot='<div><div class="row"><button class="next" id="lock">Lock it in 💌</button><button class="leave" id="cancelDate">Cancel date</button></div><div class="hint" id="planhint"></div></div>';
+if(s.foot==="plan")foot='<div><div class="row"><button class="next" id="lock">Lock it in 💌</button><button class="leave" id="later">Leave it for now</button></div><div class="hint" id="planhint"></div></div>';
 if(s.foot==="nextcancel")foot='<div class="row"><button class="next" id="next">Next</button><button class="leave" id="cancelDate">Cancel date</button></div>';
 if(s.foot==="ask")foot=askHTML();
 return foot;
 }
 function wire(s){
 var n=document.getElementById("next"); if(n)n.onclick=function(){sfxNext();if(s.jump){var j=s.jump();go(j[0],j[1])}else go(idx+1)};
-var cd=document.getElementById("cancelDate"); if(cd)cd.onclick=function(){sfxBack();go(0,cancelScreens)};
+var cd=document.getElementById("cancelDate"); if(cd)cd.onclick=function(){sfxBack();store(CANCEL,"cancelled");go(0,cancelScreens)};
 var lv=document.getElementById("leave"); if(lv)lv.onclick=leaveSite;
 var y=document.getElementById("yes"); if(y){
 y.onclick=onYes; document.getElementById("no").onclick=onNo;
@@ -610,7 +619,7 @@ muted=!muted; this.textContent=muted?"🔇":"🔊"; if(master)master.gain.value=
 function showPanel(){
 var a=load(KEY), c=load(CLICKS)||"0", w=load(WHY), d=load(DATE), cr=load(CANCEL), pj=null; try{pj=JSON.parse(load(PLAN)||"null")}catch(e){}
 panel.innerHTML='Answer: <b>'+(a==="YES"?"YES ✅":a==="NO"?"NO ❌":"no answer yet")+'</b><br>No clicks: '+c+
-(w?'<br>Reason: '+esc(w):'')+(d?'<br>First date pick: '+esc(d):'')+(pj?'<br>Plan: '+esc(pj.d+" "+pj.t+" @ "+pj.p):'')+(cr?'<br>Date cancelled ❌: '+esc(cr):'')+'<br><button id="reset">reset</button>';
+(w?'<br>Reason: '+esc(w):'')+(d?'<br>First date pick: '+esc(d):'')+(pj?'<br>Plan: '+esc(pj.d+" "+pj.t+" @ "+pj.p):'')+(cr?'<br>Date deferred/cancelled: '+esc(cr):'')+'<br><button id="reset">reset</button>';
 document.getElementById("reset").onclick=function(){
 [KEY,CLICKS,WHY,DATE,PLAN,CANCEL].forEach(function(k){store(k,null)});noCount=0;panel.classList.remove("show");resumeAudio();setMusic("intro");hist=[];busy=false;openedLetters={};go(0,screens,true);
 };
