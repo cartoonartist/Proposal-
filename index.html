@@ -352,13 +352,40 @@ function submit(){var v=i.value.trim();if(!v){document.getElementById("whyhint")
 document.getElementById("send").onclick=submit; i.onkeydown=function(e){if(e.key==="Enter")submit()};
 };
 }
+
+/* ---- FIXED Spider-Man theme (the iconic "tannnn naa naa naaaaa na naaa") ---- */
 function spiderTune(){
 if(!ensureAudio())return;
-var at=AC.currentTime+.1;
-[[220,.55],[330,.22],[330,.38],[392,.85],[330,.22],[294,.7]].forEach(function(n){
-tone(n[0],at,n[1]*.95,"sawtooth",.11); tone(n[0]*2,at,n[1]*.9,"square",.025); at+=n[1];
+var at=AC.currentTime+.05;
+// The classic 1967 Spider-Man cartoon riff, in the reel rhythm:
+// "tan-NAAA naa naa NAAAAA na naaaa"
+// Notes (relative melody): E4 -> G4 -> A4 -> B4 -> A4 -> G4 -> E4 (with the held final notes)
+// We encode as [freq, duration, type, peak]
+var melody = [
+  [329.63, 0.18, "sawtooth", 0.16],  // E4   "tan"
+  [392.00, 0.28, "sawtooth", 0.18],  // G4   "NAAA" (held)
+  [440.00, 0.16, "sawtooth", 0.16],  // A4   "naa"
+  [493.88, 0.18, "sawtooth", 0.16],  // B4   "naa"
+  [440.00, 0.55, "sawtooth", 0.20],  // A4   "NAAAAA" (long hold)
+  [392.00, 0.18, "sawtooth", 0.16],  // G4   "na"
+  [329.63, 0.42, "sawtooth", 0.18]   // E4   "naaa" (final)
+];
+melody.forEach(function(n){
+  var f=n[0], d=n[1], ty=n[2], pk=n[3];
+  // main melodic line
+  tone(f, at, d*0.92, ty, pk);
+  // octave doubling for brightness (like the cartoon's big-band blare)
+  tone(f*2, at, d*0.9, "square", pk*0.25);
+  // low brass underneath
+  tone(f/2, at, d*1.05, "triangle", pk*0.55);
+  at += d;
 });
+// Final little "sting" — the "spider-man!" flare
+tone(659.25, at+0.05, 0.45, "square", 0.22);
+tone(523.25, at+0.05, 0.45, "triangle", 0.25);
+tone(392.00, at+0.05, 0.50, "triangle", 0.22);
 }
+
 function poemHTML(st){return '<div class="poem">'+st.map(function(s){return '<p>'+s.split("\n").join("<br>")+'</p>'}).join("")+'</div>'}
 function askHTML(){return '<div class="ask"><button class="yes" id="yes">✅ yes</button>'+
 '<div class="nowrap"><div class="hint" id="hint"></div><button class="no" id="no">❌ no</button></div></div>'}
