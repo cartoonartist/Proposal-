@@ -517,5 +517,150 @@ For the best part of my story just began with you.`];
   render();
 })();
 </script>
+<!-- PASTE THIS WHOLE BLOCK right before </body> in your page (after the last </script>). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500;1,600&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
+<style id="enhance-css">
+/* ---------- richer look ---------- */
+body{
+  background:
+    radial-gradient(60vmax 60vmax at 10% 0%,#ffc2d6 0,transparent 60%),
+    radial-gradient(55vmax 55vmax at 100% 20%,#d9c4f5 0,transparent 60%),
+    radial-gradient(60vmax 60vmax at 40% 110%,#ffd9c9 0,transparent 60%),
+    linear-gradient(135deg,#fff0f5,#f1e6fb);
+  background-size:100% 100%; animation:none;
+}
+.blob{position:fixed;border-radius:50%;filter:blur(46px);opacity:.55;z-index:0;pointer-events:none;animation:blobfloat 14s ease-in-out infinite}
+.blob.a{width:42vmax;height:42vmax;left:-12vmax;top:8vh;background:#ff9fc2}
+.blob.b{width:36vmax;height:36vmax;right:-10vmax;bottom:-6vmax;background:#b79cf2;animation-delay:-5s}
+.blob.c{width:26vmax;height:26vmax;left:35vw;top:-10vmax;background:#ffd0a8;animation-delay:-9s}
+@keyframes blobfloat{50%{transform:translate(4vmax,-3vmax) scale(1.12)}}
+.spark{position:fixed;z-index:1;pointer-events:none;color:#fff;text-shadow:0 0 10px #ff8fb8,0 0 20px #c58cf0;animation:twinkle 3.2s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(40deg)}}
+
+.card{
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4); backdrop-filter:blur(18px) saturate(1.4);
+  border-radius:34px; border:1px solid rgba(255,255,255,.85);
+  box-shadow:0 30px 70px rgba(150,70,120,.28),0 0 0 6px rgba(255,255,255,.35),0 0 60px rgba(255,143,184,.25);
+}
+.card::before{ /* soft rotating glow ring */
+  content:"";position:absolute;inset:-3px;border-radius:37px;z-index:-1;
+  background:conic-gradient(from 0deg,#ff8fb8,#c58cf0,#ffd0a8,#ff8fb8);
+  filter:blur(14px);opacity:.55;animation:spinring 9s linear infinite;
+}
+@keyframes spinring{to{transform:rotate(360deg)}}
+.emoji{font-size:3.2rem;filter:drop-shadow(0 6px 14px rgba(194,82,127,.45))}
+.line{
+  font-family:"Playfair Display",Georgia,serif; font-weight:600;
+  background:linear-gradient(135deg,#8e2f6b,#c2527f 55%,#7b4fc9);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  padding:2px 4px;
+}
+.line span{-webkit-text-fill-color:transparent}
+.poem{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(1.08rem,4vw,1.25rem);
+  background:linear-gradient(#fffdf8,#fff4f8);border:2px solid #f3bfd3;box-shadow:0 10px 26px rgba(150,70,120,.18)}
+button.next,button.yes{background:linear-gradient(135deg,#ff6f9f,#a64fd0);position:relative;overflow:hidden}
+button.next::after,button.yes::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.2s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-70%}100%{left:130%}}
+button:hover{transform:translateY(-2px)}
+
+/* ---------- text entrance animations (one per question) ---------- */
+.fxc{display:inline-block;opacity:0;white-space:pre}
+.fxw{display:inline-block;opacity:0}
+.fx-1 .fxc{animation:a-type .01s forwards}
+@keyframes a-type{to{opacity:1}}
+.fx-2{animation:a-blur 1.2s ease both}
+@keyframes a-blur{from{opacity:0;filter:blur(18px);transform:scale(1.15)}to{opacity:1;filter:blur(0);transform:none}}
+.fx-3 .fxw{animation:a-drop .8s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes a-drop{from{opacity:0;transform:translateY(-70px)}to{opacity:1;transform:none}}
+.fx-4{animation:a-flip 1s cubic-bezier(.2,.8,.2,1) both;transform-origin:50% 50%}
+@keyframes a-flip{from{opacity:0;transform:perspective(600px) rotateX(-90deg)}to{opacity:1;transform:perspective(600px) rotateX(0)}}
+.fx-5{animation:a-left .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes a-left{from{opacity:0;transform:translateX(-90px) skewX(12deg)}to{opacity:1;transform:none}}
+.fx-6 .fxc{animation:a-wave .7s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes a-wave{from{opacity:0;transform:translateY(34px) scale(.5)}to{opacity:1;transform:none}}
+.fx-7{animation:a-zoom .9s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes a-zoom{from{opacity:0;transform:scale(.15)}to{opacity:1;transform:none}}
+.fx-8{animation:a-curtain 1.1s cubic-bezier(.7,0,.2,1) both}
+@keyframes a-curtain{from{clip-path:inset(0 50% 0 50%);opacity:.2}to{clip-path:inset(0 0 0 0);opacity:1}}
+.fx-9 .fxw{animation:a-spin .8s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes a-spin{from{opacity:0;transform:rotate(-200deg) scale(.2)}to{opacity:1;transform:none}}
+.fx-10{animation:a-track 1.4s ease both}
+@keyframes a-track{from{opacity:0;letter-spacing:.6em;filter:blur(6px)}to{opacity:1;letter-spacing:0;filter:none}}
+.fx-11{animation:a-right .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes a-right{from{opacity:0;transform:translateX(90px) skewX(-12deg)}to{opacity:1;transform:none}}
+.fx-12{animation:a-swing 1.3s cubic-bezier(.2,.8,.2,1) both;transform-origin:50% -40px}
+@keyframes a-swing{0%{opacity:0;transform:translateY(-60px) rotate(-25deg)}60%{opacity:1;transform:rotate(8deg)}80%{transform:rotate(-4deg)}100%{transform:none}}
+.fxp{animation:a-poem 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes a-poem{from{opacity:0;transform:translateY(40px) rotate(-1.5deg) scale(.94)}to{opacity:1;transform:none}}
+.emoji.pop{animation:a-pop .7s cubic-bezier(.3,1.8,.5,1) both,bob 2.4s ease-in-out .7s infinite}
+@keyframes a-pop{from{opacity:0;transform:scale(0) rotate(-120deg)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .blob,.spark,.card::before,button::after{animation:none}
+  [class*="fx-"],[class*="fx-"] *,.fxp,.emoji.pop{animation:none!important;opacity:1!important;transform:none!important}
+}
+</style>
+<script id="enhance-js">
+(function(){
+  var card=document.getElementById("card"); if(!card)return;
+  var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  // decorative background
+  ["a","b","c"].forEach(function(c){var d=document.createElement("div");d.className="blob "+c;document.body.appendChild(d)});
+  for(var i=0;i<16;i++){
+    var s=document.createElement("div"); s.className="spark"; s.textContent=i%3?"✦":"♡";
+    s.style.left=(Math.random()*96)+"vw"; s.style.top=(Math.random()*92)+"vh";
+    s.style.fontSize=(10+Math.random()*16)+"px"; s.style.animationDelay=(Math.random()*3)+"s";
+    s.style.animationDuration=(2.4+Math.random()*3)+"s"; document.body.appendChild(s);
+  }
+
+  // every new question gets the next animation (12 styles); revisits keep the same one
+  var seen={}, count=0, TOTAL=12;
+  function plain(el){for(var i=0;i<el.childNodes.length;i++)if(el.childNodes[i].nodeType!==3)return false;return true}
+  function split(el,mode,step){
+    var txt=el.textContent, out="", n=0;
+    if(mode==="c"){
+      txt.split(/(\s+)/).forEach(function(w){
+        if(/^\s+$/.test(w)){out+=w;return}
+        out+='<span style="display:inline-block;white-space:nowrap">';
+        w.split("").forEach(function(ch){
+          out+='<span class="fxc" style="animation-delay:'+(n++*step)+'ms">'+ch.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>';
+        });
+        out+='</span>';
+      });
+    }else{
+      txt.split(/(\s+)/).forEach(function(w){
+        if(/^\s+$/.test(w)){out+=w;return}
+        out+='<span class="fxw" style="animation-delay:'+(n++*step)+'ms">'+w.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>';
+      });
+    }
+    el.innerHTML=out;
+  }
+  function apply(){
+    var line=card.querySelector(".line:not([data-fx])");
+    var poem=card.querySelector(".poem:not([data-fx])");
+    var em=card.querySelector(".emoji");
+    var target=line||poem; if(!target)return;
+    var key=(target.textContent||"").trim().slice(0,60);
+    if(!(key in seen)){seen[key]=(count++%TOTAL)+1}
+    var n=seen[key];
+    target.setAttribute("data-fx","1");
+    if(em){em.classList.remove("pop");void em.offsetWidth;em.classList.add("pop")}
+    if(reduce)return;
+    if(target===poem){target.classList.add("fxp");return}
+    if(!plain(target))return;
+    // text-splitting styles: 1 typewriter, 3 word drop, 6 letter wave, 9 word spin
+    if(n===1){split(target,"c",55)}
+    else if(n===6){split(target,"c",35)}
+    else if(n===3){split(target,"w",140)}
+    else if(n===9){split(target,"w",150)}
+    target.classList.add("fx-"+n);
+  }
+  new MutationObserver(function(){apply()}).observe(card,{childList:true,subtree:true});
+  apply();
+})();
+</script>
+
 </body>
 </html>
